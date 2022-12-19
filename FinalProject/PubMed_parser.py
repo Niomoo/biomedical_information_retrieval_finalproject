@@ -38,3 +38,30 @@ def run():
     with open('hw4/data/hemodialysis.json', 'w') as f:
         json.dump(abstractText, f, indent=2)
         # print("{}) {}".format(i+1, paper['MedlineCitation']['Article']['ArticleTitle']))
+
+count = 0
+for count,line in enumerate(open("litcovid2BioCJSON.json",'rU',encoding='utf-8')):
+    pass
+    count += 1
+print("文件总行数：",count)
+split = 5 
+nums = [ (count*i//split) for i in range(1,split+1)]
+print(nums)
+
+
+current_lines = 0
+data_list = []
+with open('litcovid2BioCJSON.json', 'r', encoding='utf-8') as file:
+    i = 0
+    for line in file:
+        line = line.replace('},', '}')
+        data_list.append(json.loads(line))
+        current_lines += 1
+        if current_lines in nums:
+            print(current_lines)
+            file_name = 'data_temp/data_' + str(current_lines) + '.json'
+            with open(file_name, 'w', encoding='utf-8') as f:
+                data = json.dumps(data_list)
+                f.write(data)
+                data_list = []
+                data = []
