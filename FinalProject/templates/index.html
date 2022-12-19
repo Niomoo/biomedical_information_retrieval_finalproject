@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Final Project</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
+<style>
+body, html {
+  height: 100%;
+  font-family: "Inconsolata", sans-serif;
+}
+
+.bgimg {
+  background-position: center;
+  background-size: cover;
+  /* background-image: url("https://cdn.eso.org/images/banner1920/eso2202a.jpg"); */
+  background-image: url("https://cdn.buttercms.com/d6KHSR5FSrKh75Iaa309");
+  min-height: 75%;
+}
+
+.menu {
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<!-- Links (sit on top) -->
+<div class="w3-top">
+  <div class="w3-row w3-padding w3-black"></div>
+</div>
+
+<!-- Header with image -->
+<header class="bgimg w3-display-container w3-grayscale-min" id="home">
+  <div class="w3-display-bottomleft w3-center w3-padding-large w3-hide-small">
+    <span class="w3-text-white">Medical School and Nutrition</span>
+  </div>
+  <!-- <div class="w3-display-middle w3-center">
+    <span class="w3-text-yellow" style="font-size:90px">TF-IDF</span>
+  </div> -->
+  <div class="w3-display-bottomright w3-center w3-padding-large">
+    <span class="w3-text-white">08 November 2018</span>
+  </div>
+</header>
+
+<!-- Add a background color and large text to the whole page -->
+<div class="w3-sand w3-grayscale w3-large">
+
+<!-- About Container 1-->
+<div class="w3-container" id="about">
+  <div class="w3-content" style="max-width:700px">
+    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">Part1: Search keyword from "covid" category</span></h5>
+    <div class="w3-container" id="where" style="padding-bottom:32px;">
+      <div class="w3-content" style="max-width:700px">
+      <form method="post" action="search_covid">
+        {% csrf_token %}
+        <p>Please select the way for ranking:</p>
+        <input type="radio" id="one" value="one" name="tfidf">
+        <label for="one">Natural TF-Normal IDF</label><br>
+        <input type="radio" id="two" value="two" name="tfidf">
+        <label for="two">Logarithm TF-Normal IDF</label><br>
+        <input type="radio" id="three" value="three" name="tfidf">
+        <label for="three">Augmented TF-Normal IDF</label><br>
+        <input type="radio" id="four" value="four" name="tfidf">
+        <label for="four">Boolean TF-Normal IDF</label><br>
+        <input type="radio" id="five" value="five" name="tfidf">
+        <label for="five">Natural TF-Smooth IDF</label><br>
+        <p>Query or Keyword:</p>
+        <input type="radio" id="query1" value="query1" name="qk">
+        <label for="query1">Query</label><br>
+        <input type="radio" id="keyword1" value="keyword1" name="qk">
+        <label for="keyword1">Keyword</label><br>
+        <p><input class="w3-input w3-padding-16 w3-border" type="text" name="keyword"></p>
+        <p><button class="w3-button w3-black" type="submit">Search it</button></p>
+      </form>
+      <div class="w3-panel w3-leftbar w3-light-grey">
+        {% for i in info %}
+        <h4>#{{i.doc_num}}</h4>
+        <h5>{{i.score}}</h5>
+        <p>{{i.doc_content}}</p>
+        {% endfor %}
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- About Container 2-->
+<div class="w3-container" id="about">
+  <div class="w3-content" style="max-width:700px">
+    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">Part2: Search keyword from "monkeypox" category</span></h5>
+    <div class="w3-container" id="where" style="padding-bottom:32px;">
+      <div class="w3-content" style="max-width:700px">
+        <form method="post" action="search_mk">
+          {% csrf_token %}
+          <p>Please select the way for ranking:</p>
+          <input type="radio" id="one2" value="one2" name="mktfidf">
+          <label for="one2">Natural TF-Normal IDF</label><br>
+          <input type="radio" id="two2" value="two2" name="mktfidf">
+          <label for="two2">Logarithm TF-Normal IDF</label><br>
+          <input type="radio" id="three2" value="three2" name="mktfidf">
+          <label for="three2">Augmented TF-Normal IDF</label><br>
+          <input type="radio" id="four2" value="four2" name="mktfidf">
+          <label for="four2">Boolean TF-Normal IDF</label><br>
+          <input type="radio" id="five2" value="five2" name="mktfidf">
+          <label for="five2">Natural TF-Smooth IDF</label><br>
+          <p>Query or Keyword:</p>
+          <input type="radio" id="query2" value="query2" name="qk2">
+          <label for="query2">Query</label><br>
+          <input type="radio" id="keyword2" value="keyword2" name="qk2">
+          <label for="keyword2">Keyword</label><br>
+          <p><input class="w3-input w3-padding-16 w3-border" type="text" name="keyword3"></p>
+          <p><button class="w3-button w3-black" type="submit">Search it</button></p>
+        </form>
+        <div class="w3-panel w3-leftbar w3-light-grey">
+          {% for j in info2 %}
+          <h4>#{{j.doc_num}}</h4>
+          <h5>{{j.score}}</h5>
+          <p>{{j.doc_content}}</p>
+          {% endfor %}
+        </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- About Container 3-->
+<div class="w3-container" id="about">
+  <div class="w3-content" style="max-width:700px">
+    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">Part3: Analysis</span></h5>
+    <div class="w3-container" id="where" style="padding-bottom:32px;">
+      <div class="w3-content" style="max-width:700px">
+        {% load static %}
+        <p style="text-align: center"><strong>Category 1: Covid || Keyword: vaccine</strong></p>
+        <img src="{% static 'textRetrieval\img\cv_vaccin.png'  %}" style="width:100%;max-width:1000px" class="w3-margin-top">
+        <p style="text-align: center"><strong>Category 1: Covid || Keyword: Wuhan</strong></p>
+        <img src="{% static 'textRetrieval\img\cv_wuhan.png'  %}" style="width:100%;max-width:1000px" class="w3-margin-top">
+        <p style="text-align: center"><strong>Category 2: Monkeypox || Keyword: monkeypox</strong></p>
+        <img src="{% static 'textRetrieval\img\mk_monkeypox.png'  %}" style="width:100%;max-width:1000px" class="w3-margin-top">
+        <p style="text-align: center"><strong>Category 2: Monkeypox || Keyword: covid19</strong></p>
+        <img src="{% static 'textRetrieval\img\mk_covid19.png'  %}" style="width:100%;max-width:1000px" class="w3-margin-top">
+      </div>
+    </div>
+    <div class="w3-panel w3-leftbar w3-light-grey">
+      
+    </div>
+    <!-- <img src="https://i2.wp.com/coinotizia.com/wp-content/uploads/2022/09/starbucks-leverages-polygon-for-web3-push-coffeehouse-chain-to-issue-nft-stamps.jpg" style="width:100%;max-width:1000px" class="w3-margin-top">
+    <p><strong>Opening hours:</strong> everyday from 6am to 5pm.</p>
+    <p><strong>Address:</strong> 15 Adr street, 5015, NY</p> -->
+  </div>
+</div>
+
+<!-- End page content -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-center w3-light-grey w3-padding-48 w3-large">
+  <p>Template is from <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+  <p>Project's author is <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">Tsao Ching Chieh</a></p>
+</footer>
+
+<script>
+// Tabbed Menu
+function openMenu(evt, menuName) {
+  var i, x, tablinks;
+  x = document.getElementsByClassName("menu");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < x.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" w3-dark-grey", "");
+  }
+  document.getElementById(menuName).style.display = "block";
+  evt.currentTarget.firstElementChild.className += " w3-dark-grey";
+}
+document.getElementById("myLink").click();
+</script>
+
+</body>
+</html>
