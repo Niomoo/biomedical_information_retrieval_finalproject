@@ -1,11 +1,12 @@
 from Bio import Entrez
 import json
+import csv
 
 def search(query):
     Entrez.email = 'jennyliu.lyh@iir.csie.ncku.edu.tw'
     handle = Entrez.esearch(db='pubmed', 
                             sort='relevance', 
-                            retmax='200',
+                            retmax='1000',
                             retmode='xml', 
                             term=query)
     results = Entrez.read(handle)
@@ -39,29 +40,39 @@ def run():
         json.dump(abstractText, f, indent=2)
         # print("{}) {}".format(i+1, paper['MedlineCitation']['Article']['ArticleTitle']))
 
+results = []
 count = 0
-for count,line in enumerate(open("litcovid2BioCJSON.json",'rU',encoding='utf-8')):
-    pass
-    count += 1
-print("文件总行数：",count)
-split = 5 
-nums = [ (count*i//split) for i in range(1,split+1)]
-print(nums)
-
-
-current_lines = 0
-data_list = []
-with open('litcovid2BioCJSON.json', 'r', encoding='utf-8') as file:
-    i = 0
+with open("depression_search.results.litcovid.tsv", "r", encoding="utf-8") as file:
     for line in file:
-        line = line.replace('},', '}')
-        data_list.append(json.loads(line))
-        current_lines += 1
-        if current_lines in nums:
-            print(current_lines)
-            file_name = 'data_temp/data_' + str(current_lines) + '.json'
-            with open(file_name, 'w', encoding='utf-8') as f:
-                data = json.dumps(data_list)
-                f.write(data)
-                data_list = []
-                data = []
+        l = line.split('\t')
+        results.append(l[0])
+        if len(results) == 5000: break
+# print(results)
+
+def fetch_covid(id_list):
+    ids = ','.join(id_list)
+    Entrez.email = 'jennyliu.lyh@iir.csie.ncku.edu.tw'
+    handle = Entrez.efetch(db='pubmed',
+                           retmode='xml',
+                           id=ids)
+    results = Entrez.read(handle)
+    return results
+
+papers = fetch_covid(results)
+abstractText = []
+for i, paper in enumerate(papers['PubmedArticle']):
+    if 'Abstract' in paper['MedlineCitation']['Article']:
+        id = paper['MedlineCitation']['PMID']
+        title = paper['MedlineCitation']['Article']['ArticleTitle']
+        category = 'depression'
+        content = ''
+        mesh = []
+        for text in paper['MedlineCitation']['Article']['Abstract']['AbstractText']:
+            content += text
+        if 'MeshHeadingList' in paper['MedlineCitation']:
+            mesh = paper['MedlineCitation']['MeshHeadingList']
+        abstractText.append({'PMID': id, 'title': title, 'category': category, 'content': content, 'MeSHterm': mesh})
+
+with open('depression_data.json', 'w') as f:
+    json.dump(abstractText, f, indent=2)
+    # print("{}) {}".format(i+1, paper['MedlineCitation']['Article']['ArticleTitle']))
