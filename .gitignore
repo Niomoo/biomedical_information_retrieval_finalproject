@@ -1,6 +1,3 @@
 BIR/settings.py
 __pycache__
-depression_search.results.litcovid.tsv
-covid_search.results.litcovid.tsv
-depression_data.json
-covid_data.json
+data/
