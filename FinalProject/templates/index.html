@@ -52,104 +52,42 @@ body, html {
 <!-- About Container 1-->
 <div class="w3-container" id="about">
   <div class="w3-content" style="max-width:700px">
-    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">Part1: Search keyword from "covid" category</span></h5>
+    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">Part1: Covid Network</span></h5>
     <div class="w3-container" id="where" style="padding-bottom:32px;">
       <div class="w3-content" style="max-width:700px">
-      <form method="post" action="search_covid">
-        {% csrf_token %}
-        <p>Please select the way for ranking:</p>
-        <input type="radio" id="one" value="one" name="tfidf">
-        <label for="one">Natural TF-Normal IDF</label><br>
-        <input type="radio" id="two" value="two" name="tfidf">
-        <label for="two">Logarithm TF-Normal IDF</label><br>
-        <input type="radio" id="three" value="three" name="tfidf">
-        <label for="three">Augmented TF-Normal IDF</label><br>
-        <input type="radio" id="four" value="four" name="tfidf">
-        <label for="four">Boolean TF-Normal IDF</label><br>
-        <input type="radio" id="five" value="five" name="tfidf">
-        <label for="five">Natural TF-Smooth IDF</label><br>
-        <p>Query or Keyword:</p>
-        <input type="radio" id="query1" value="query1" name="qk">
-        <label for="query1">Query</label><br>
-        <input type="radio" id="keyword1" value="keyword1" name="qk">
-        <label for="keyword1">Keyword</label><br>
-        <p><input class="w3-input w3-padding-16 w3-border" type="text" name="keyword"></p>
-        <p><button class="w3-button w3-black" type="submit">Search it</button></p>
-      </form>
-      <div class="w3-panel w3-leftbar w3-light-grey">
-        {% for i in info %}
-        <h4>#{{i.doc_num}}</h4>
-        <h5>{{i.score}}</h5>
-        <p>{{i.doc_content}}</p>
-        {% endfor %}
       </div>
     </div>
-    
   </div>
 </div>
 
 <!-- About Container 2-->
 <div class="w3-container" id="about">
   <div class="w3-content" style="max-width:700px">
-    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">Part2: Search keyword from "monkeypox" category</span></h5>
+    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">Part2: Theme -- "Depression" Network</span></h5>
     <div class="w3-container" id="where" style="padding-bottom:32px;">
       <div class="w3-content" style="max-width:700px">
-        <form method="post" action="search_mk">
+        <form method="post" action="search">
           {% csrf_token %}
-          <p>Please select the way for ranking:</p>
-          <input type="radio" id="one2" value="one2" name="mktfidf">
-          <label for="one2">Natural TF-Normal IDF</label><br>
-          <input type="radio" id="two2" value="two2" name="mktfidf">
-          <label for="two2">Logarithm TF-Normal IDF</label><br>
-          <input type="radio" id="three2" value="three2" name="mktfidf">
-          <label for="three2">Augmented TF-Normal IDF</label><br>
-          <input type="radio" id="four2" value="four2" name="mktfidf">
-          <label for="four2">Boolean TF-Normal IDF</label><br>
-          <input type="radio" id="five2" value="five2" name="mktfidf">
-          <label for="five2">Natural TF-Smooth IDF</label><br>
-          <p>Query or Keyword:</p>
-          <input type="radio" id="query2" value="query2" name="qk2">
-          <label for="query2">Query</label><br>
-          <input type="radio" id="keyword2" value="keyword2" name="qk2">
-          <label for="keyword2">Keyword</label><br>
-          <p><input class="w3-input w3-padding-16 w3-border" type="text" name="keyword3"></p>
+          <p>Please select the method for ranking:</p>
+          <input type="radio" id="method_mesh" value="method_mesh" name="ranking">
+          <label for="one2">Mesh Term</label><br>
+          <input type="radio" id="method_sg" value="method_sg" name="ranking">
+          <label for="two2">Skip Gram</label><br>
+          <input type="radio" id="method_cbow" value="method_cbow" name="ranking">
+          <label for="three2">CBOW</label><br>
+          <p>Keyword:</p>
+          <p><input class="w3-input w3-padding-16 w3-border" type="text" name="keyword"></p>
           <p><button class="w3-button w3-black" type="submit">Search it</button></p>
         </form>
-        <div class="w3-panel w3-leftbar w3-light-grey">
-          {% for j in info2 %}
-          <h4>#{{j.doc_num}}</h4>
-          <h5>{{j.score}}</h5>
-          <p>{{j.doc_content}}</p>
-          {% endfor %}
-        </div>
-    </div>
-    
-  </div>
-</div>
 
-<!-- About Container 3-->
-<div class="w3-container" id="about">
-  <div class="w3-content" style="max-width:700px">
-    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">Part3: Analysis</span></h5>
-    <div class="w3-container" id="where" style="padding-bottom:32px;">
-      <div class="w3-content" style="max-width:700px">
-        {% load static %}
-        <p style="text-align: center"><strong>Category 1: Covid || Keyword: vaccine</strong></p>
-        <img src="{% static 'textRetrieval\img\cv_vaccin.png'  %}" style="width:100%;max-width:1000px" class="w3-margin-top">
-        <p style="text-align: center"><strong>Category 1: Covid || Keyword: Wuhan</strong></p>
-        <img src="{% static 'textRetrieval\img\cv_wuhan.png'  %}" style="width:100%;max-width:1000px" class="w3-margin-top">
-        <p style="text-align: center"><strong>Category 2: Monkeypox || Keyword: monkeypox</strong></p>
-        <img src="{% static 'textRetrieval\img\mk_monkeypox.png'  %}" style="width:100%;max-width:1000px" class="w3-margin-top">
-        <p style="text-align: center"><strong>Category 2: Monkeypox || Keyword: covid19</strong></p>
-        <img src="{% static 'textRetrieval\img\mk_covid19.png'  %}" style="width:100%;max-width:1000px" class="w3-margin-top">
-      </div>
     </div>
+    {% for i in search_infos %}
     <div class="w3-panel w3-leftbar w3-light-grey">
-      
+      <h4>ID: {{i.doc_id}}</h4>
+      <h4><strong>{{i.doc_title}}</strong></h4>
+      <p>{{i.doc_content}}</p>
     </div>
-    <!-- <img src="https://i2.wp.com/coinotizia.com/wp-content/uploads/2022/09/starbucks-leverages-polygon-for-web3-push-coffeehouse-chain-to-issue-nft-stamps.jpg" style="width:100%;max-width:1000px" class="w3-margin-top">
-    <p><strong>Opening hours:</strong> everyday from 6am to 5pm.</p>
-    <p><strong>Address:</strong> 15 Adr street, 5015, NY</p> -->
+    {% endfor %}
   </div>
 </div>
 
@@ -159,7 +97,7 @@ body, html {
 <!-- Footer -->
 <footer class="w3-center w3-light-grey w3-padding-48 w3-large">
   <p>Template is from <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
-  <p>Project's author is <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">Tsao Ching Chieh</a></p>
+  <p>Project's author is <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">Jenny & Ching Chieh</a></p>
 </footer>
 
 <script>

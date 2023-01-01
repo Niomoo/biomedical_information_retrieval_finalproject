@@ -5,4 +5,5 @@ from django.conf import settings
 
 urlpatterns = [
     path('', index, name='index'),
+    path('search', search, name='search'),
 ]
