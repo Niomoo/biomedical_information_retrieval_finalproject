@@ -79,7 +79,9 @@ body, html {
           <p><input class="w3-input w3-padding-16 w3-border" type="text" name="keyword"></p>
           <p><button class="w3-button w3-black" type="submit">Search it</button></p>
         </form>
-
+    </div>
+    <div>
+      {{graph | safe}}
     </div>
     {% for i in search_infos %}
     <div class="w3-panel w3-leftbar w3-light-grey">
