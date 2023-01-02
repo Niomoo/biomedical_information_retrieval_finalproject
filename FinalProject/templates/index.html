@@ -24,6 +24,11 @@ body, html {
 .menu {
   display: none;
 }
+
+.box {
+  display: flex;
+  justify-content: center;
+}
 </style>
 </head>
 <body>
@@ -54,7 +59,7 @@ body, html {
   <div class="w3-content" style="max-width:700px">
     <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">Part1: Covid Network</span></h5>
     <div class="w3-container" id="where" style="padding-bottom:32px;">
-      <div class="w3-content" style="max-width:700px">
+      <div class="w3-content box" style="max-width:700px">
         <div>
           {{ covid_img|safe}}
         </div>
@@ -83,8 +88,10 @@ body, html {
           <p><button class="w3-button w3-black" type="submit">Search it</button></p>
         </form>
     </div>
-    <div>
-      {{graph | safe}}
+    <div class="box" style="max-width:700px">
+      <div>
+        {{graph | safe}}
+      </div>
     </div>
     {% for i in search_infos %}
     <div class="w3-panel w3-leftbar w3-light-grey">
