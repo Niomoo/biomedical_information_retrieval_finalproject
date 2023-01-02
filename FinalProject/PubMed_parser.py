@@ -2,13 +2,14 @@ from Bio import Entrez
 import json
 import csv
 
-results = []
-count = 0
-with open("data/depression_search.results.litcovid.tsv", "r", encoding="utf-8") as file:
-    for line in file:
-        l = line.split('\t')
-        results.append(l[0])
-        if len(results) == 5000: break
+def read_file(filename, num):
+    results = []
+    with open(filename, "r", encoding="utf-8") as file:
+        for line in file:
+            l = line.split('\t')
+            results.append(l[0])
+            if len(results) == num: break
+        return results
 # print(results)
 
 def fetch_covid(id_list):
@@ -20,21 +21,33 @@ def fetch_covid(id_list):
     results = Entrez.read(handle)
     return results
 
-papers = fetch_covid(results)
-abstractText = []
-for i, paper in enumerate(papers['PubmedArticle']):
-    if 'Abstract' in paper['MedlineCitation']['Article']:
-        id = paper['MedlineCitation']['PMID']
-        title = paper['MedlineCitation']['Article']['ArticleTitle']
-        category = 'depression'
-        content = ''
-        mesh = []
-        for text in paper['MedlineCitation']['Article']['Abstract']['AbstractText']:
-            content += text
-        if 'MeshHeadingList' in paper['MedlineCitation']:
-            mesh = paper['MedlineCitation']['MeshHeadingList']
-        abstractText.append({'PMID': id, 'title': title, 'category': category, 'content': content, 'MeSHterm': mesh})
+def save_file(filename, results, category):
+    papers = fetch_covid(results)
+    abstractText = []
+    for i, paper in enumerate(papers['PubmedArticle']):
+        if 'Abstract' in paper['MedlineCitation']['Article']:
+            id = paper['MedlineCitation']['PMID']
+            title = paper['MedlineCitation']['Article']['ArticleTitle']
+            content = ''
+            mesh = {}
+            for text in paper['MedlineCitation']['Article']['Abstract']['AbstractText']:
+                content += text
+            if 'MeshHeadingList' in paper['MedlineCitation']:
+                for terms in paper['MedlineCitation']['MeshHeadingList']:
+                    for term in terms['QualifierName']:
+                        if term not in mesh:
+                            mesh[term] = 1
+                        else:
+                            mesh[term] += 1
+                    if terms['DescriptorName'] not in mesh:
+                        mesh[terms['DescriptorName']] = 1
+                    else:
+                        mesh[terms['DescriptorName']] += 1         
+            abstractText.append({'PMID': id, 'title': title, 'category': category, 'content': content, 'MeSHterm': mesh})
+    with open(filename, 'w') as f:
+        json.dump(abstractText, f, indent=2)
 
-with open('data/depression_data.json', 'w') as f:
-    json.dump(abstractText, f, indent=2)
-    # print("{}) {}".format(i+1, paper['MedlineCitation']['Article']['ArticleTitle']))
+results = read_file('data/covid_search.results.litcovid.tsv', 5000)
+save_file('data/covid_data.json', results, 'covid')
+results = read_file('data/depression_search.results.litcovid.tsv', 2000)
+save_file('data/depression_data.json', results, 'depression')

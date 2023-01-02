@@ -33,7 +33,65 @@ class searchInfo:
         self.doc_content = doc_content
 
 def index(request):
-    return render(request, 'index.html')
+    image_bytes = get_covid_img()
+    return render(request, 'index.html', {
+        'covid_img': image_bytes,
+    })
+
+def get_value(sort_list, key):
+    return [v for k, v in sort_list if key == k]
+    
+def get_index(sort_list, key):
+    for i, item in enumerate(sort_list):
+        if item[0] == key:
+            return i
+
+def get_covid_img():
+    filepath = os.path.join(PROJECT_ROOT, 'covid_data.json')
+    MeSHterm = {}
+    with open(filepath) as file:
+        jsondata = json.loads(file.read())
+        for article in jsondata:
+            if len(article['MeSHterm']) != 0:
+                for terms in article['MeSHterm']:
+                    if terms not in MeSHterm:
+                        MeSHterm[terms] = 1
+                    else:
+                        MeSHterm[terms] += article['MeSHterm'][terms]         
+    sorted_MeSHterm = sorted(MeSHterm.items(), key=lambda x: x[1], reverse=True)
+    covid_list = sorted_MeSHterm[:10]
+
+    fig, ax = plt.subplots(figsize=(15, 8))
+
+    key_word = 'covid'
+    relationships = pd.DataFrame({'from': [key_word, key_word, key_word, key_word, key_word, key_word, key_word, key_word, key_word, key_word], 
+                'to':   covid_list})
+
+    # Create DF for node characteristics
+    carac = pd.DataFrame({'ID':[key_word, covid_list[0], covid_list[1], covid_list[2], covid_list[3], covid_list[4], covid_list[5], covid_list[6], covid_list[7], covid_list[8], covid_list[9]], 
+                'type':['point', 'big', 'big', 'big', 'big', 'mid', 'mid', 'mid', 'sml', 'sml', 'sml']})
+
+    # Create graph object
+    G = nx.from_pandas_edgelist(relationships, 'from', 'to', create_using=nx.Graph())
+
+    # Make types into categories
+    carac = carac.set_index('ID')
+    carac = carac.reindex(G.nodes())
+
+    carac['type'] = pd.Categorical(carac['type'])
+    carac['type'].cat.codes
+
+    # Specify colors
+    cmap = matplotlib.colors.ListedColormap(['red', 'orange', 'yellow', 'lightgreen'])
+
+    nx.draw(G, with_labels=True, node_color=carac['type'].cat.codes, cmap=cmap, 
+            node_size=[2000 if v == 'sml' else 4000 for v in carac['type']])
+    buf = io.BytesIO()
+    plt.savefig(buf, format='svg', bbox_inches='tight')
+    image_bytes = buf.getvalue().decode('utf-8')
+    buf.close()
+    plt.close()
+    return image_bytes
 
 def search(request):
     if request.method == "POST":
@@ -104,7 +162,7 @@ def search(request):
 
         # my_chart = image_bytes
 
-
+        covid_img = get_covid_img()
 
         # Show the data
         with open(os.path.join(PROJECT_ROOT, 'depression_data.json'), "r", encoding="utf-8") as f:
@@ -118,7 +176,11 @@ def search(request):
                         articles_set.add(articles["PMID"])
                         search_info.append(searchInfo(articles["PMID"], articles["title"], articles["content"]))
             
-            return render(request, 'index.html', {'search_infos': search_info, 'graph':image_bytes})
+            return render(request, 'index.html', {
+                'search_infos': search_info, 
+                'graph':image_bytes,
+                'covid_img': covid_img,
+            })
 
 
 
